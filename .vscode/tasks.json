@@ -1,0 +1,148 @@
+{
+	"version": "0.1.0",
+	"command": "${env.windir}\\sysnative\\windowspowershell\\v1.0\\PowerShell.exe",
+	"isShellCommand": true,
+	"showOutput": "always",
+    "args": [
+        "-NoProfile", "-ExecutionPolicy", "Bypass"
+    ],
+    "tasks": [
+        {
+            "taskName": "Watch.Project.Single",
+            "suppressTaskName": true,
+            "args": [
+                "Write-Host 'Watching Single Project Files';",
+                "Import-Module -Name Pester -RequiredVersion 3.4.3 -Force;",
+                "Import-Module -Name PowerShellGuard;",
+                "(gci \"${workspaceRoot}\\${workspaceRootFolderName}\\*.ps1\" -recurse).Foreach{ New-Guard -Path $_.FullName -TestPath \"${workspaceRoot}\\Tests\\$($_.basename).Tests.ps1\" -TestCommand {Write-Host \"Invoking Watch.Project.Single\"; Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}} -ErrorAction SilentlyContinue};",
+                "(gci \"${workspaceRoot}\\Tests\\*.ps1\").Foreach{ New-Guard -Path $_.FullName -TestPath $_.FullName -TestCommand {Write-Host \"Invoking Watch.Project.Single\"; Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}} -ErrorAction SilentlyContinue};",
+                "Wait-Guard"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "owner": "Watch.Project.Single",
+                    "fileLocation": "absolute",
+                    "pattern": [
+                        {
+                            "regexp": "^\\s*(\\[-\\]\\s*.*?)(\\d+)ms\\s*$",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "^\\s+at\\s+[^,]+,\\s*(.*?):\\s+line\\s+(\\d+)$",
+                            "file": 1,
+                            "line": 2
+                        }
+                    ],
+                    "watching": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^Invoking Watch\\.Project\\.Single$",
+                        "endsPattern": "^Passed:\\s\\d+\\sFailed:\\s\\d+\\sSkipped:\\s\\d+\\sPending:\\s\\d+\\sInconclusive:\\s\\d+\\s$"
+                    }
+                }
+            ]
+        },
+        {
+            "taskName": "Watch.Project",
+            "isTestCommand": true,
+            "suppressTaskName": true,
+            "args": [
+                "Write-Host 'Watching Project';",
+                "Import-Module -Name Pester -RequiredVersion 3.4.3 -Force;",
+                "Import-Module -Name PowerShellGuard;",
+                "New-Guard -Path \"${workspaceRoot}\" -PathFilter \"*.ps1\" -MonitorSubdirectories -TestPath \"${workspaceRoot}\\Tests\" -TestCommand {Write-Host \"Invoking Watch.Project\"; Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}} -Wait;"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "owner": "Watch.Project",
+                    "fileLocation": "absolute",
+                    "pattern": [
+                        {
+                            "regexp": "^\\s*(\\[-\\]\\s*.*?)(\\d+)ms\\s*$",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "^\\s+at\\s+[^,]+,\\s*(.*?):\\s+line\\s+(\\d+)$",
+                            "file": 1,
+                            "line": 2
+                        }
+                    ],
+                    "watching": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^Invoking Watch\\.Project$",
+                        "endsPattern": "^Passed:\\s\\d+\\sFailed:\\s\\d+\\sSkipped:\\s\\d+\\sPending:\\s\\d+\\sInconclusive:\\s\\d+\\s$"
+                    }
+                }
+            ]
+        },
+        {
+            "taskName": "Watch.Tests.Single",
+            "suppressTaskName": true,
+            "args": [
+                "Write-Host 'Watching Tests';",
+                "Import-Module -Name Pester -RequiredVersion 3.4.3 -Force;",
+                "Import-Module PowerShellGuard;",
+                "(gci \"${workspaceRoot}\\Tests\\*.ps1\").Foreach{ New-Guard -Path $_.FullName -TestPath $_.FullName -TestCommand {Write-Host \"Invoking Watch.Tests.Single\"; Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}} -ErrorAction SilentlyContinue};",
+                "Wait-Guard"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "owner": "Watch.Tests.Single",
+                    "fileLocation": "relative",
+                    "pattern": [
+                        {
+                            "regexp": "^\\s*(\\[-\\]\\s*.*?)(\\d+)ms\\s*$",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "^\\s+at\\s+[^,]+,\\s*(.*?):\\s+line\\s+(\\d+)$",
+                            "file": 1,
+                            "line": 2
+                        }
+                    ],
+                    "watching": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^Invoking Watch\\.Tests\\.Single$",
+                        "endsPattern": "^Passed:\\s\\d+\\sFailed:\\s\\d+\\sSkipped:\\s\\d+\\sPending:\\s\\d+\\sInconclusive:\\s\\d+\\s$"
+                    }
+                }
+            ]
+        },
+        {
+            "taskName": "Watch.Tests",
+            "suppressTaskName": true,
+            "args": [
+                "Write-Host 'Watching Tests';",
+                "Import-Module -Name Pester -RequiredVersion 3.4.3 -Force;",
+                "Import-Module PowerShellGuard;",
+                "(gci \"${workspaceRoot}\\Tests\\*.ps1\").Foreach{ New-Guard -Path $_.FullName -TestPath $_.FullName -TestCommand {Write-Host \"Invoking Watch.Tests\"; Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}} -ErrorAction SilentlyContinue};",
+                "Wait-Guard"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "owner": "Watch.Tests",
+                    "fileLocation": "relative",
+                    "pattern": [
+                        {
+                            "regexp": "^\\s*(\\[-\\]\\s*.*?)(\\d+)ms\\s*$",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "^\\s+at\\s+[^,]+,\\s*(.*?):\\s+line\\s+(\\d+)$",
+                            "file": 1,
+                            "line": 2
+                        }
+                    ],
+                    "watching": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^Invoking Watch\\.Tests$",
+                        "endsPattern": "^Passed:\\s\\d+\\sFailed:\\s\\d+\\sSkipped:\\s\\d+\\sPending:\\s\\d+\\sInconclusive:\\s\\d+\\s$"
+                    }
+                }
+            ]
+        }
+    ]
+}
